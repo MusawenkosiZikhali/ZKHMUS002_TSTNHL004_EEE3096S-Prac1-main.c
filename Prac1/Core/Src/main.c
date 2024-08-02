@@ -116,11 +116,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // TODO: Start timer TIM16
+  HAL_TIM_Base_Start(&htim16);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint32_t delay = 1000;  // Default delay (1 second)
+  uint8_t patternIndex = 0;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -128,18 +131,23 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     // TODO: Check pushbuttons to change timer delay
-	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) {
-	              delayTime = 500; // Set delay to 0.5s
-	          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1) == GPIO_PIN_SET) {
-	              delayTime = 2000; // Set delay to 2s
-	          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_SET) {
-	              delayTime = 1000; // Set delay to 1s
-	          } else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3) == GPIO_PIN_SET) {
-	              for (int d =0;d<9;d++){
-	            	  patterns[0][i];
-	              }// Reset to pattern 1
+	  // Check the state of the buttons
+	          if (HAL_GPIO_ReadPin(GPIOA, BUTTON_PIN_0) == GPIO_PIN_RESET) {
+	              delay = 500;  // 0.5 second delay
+	          } else if (HAL_GPIO_ReadPin(GPIOA, BUTTON_PIN_1) == GPIO_PIN_RESET) {
+	              delay = 2000;  // 2 second delay
+	          } else if (HAL_GPIO_ReadPin(GPIOA, BUTTON_PIN_2) == GPIO_PIN_RESET) {
+	              delay = 1000;  // 1 second delay
 	          }
-  }
+
+	          // Display the current pattern
+	          displayPattern(patternIndex);
+
+	          // Increment pattern index and wrap around if necessary
+	          patternIndex = (patternIndex + 1) % 9;
+
+	          // Delay for the specified time
+	          HAL_Delay(delay);
 
   /* USER CODE END 3 */
 }
